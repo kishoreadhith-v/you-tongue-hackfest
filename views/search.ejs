@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+    <%- include('partials/head') %>
+<body>
+    <%- include('partials/nav') %>
+    <h1>Search for a YouTube Video</h1>
+    <form action="/video" method="post">
+        <label for="videoUrl">Enter a YouTube Video URL:</label>
+        <input type="text" id="videoUrl" name="videoUrl" required>
+        <button type="submit">Search</button>
+    </form>
+</body>
+</html>

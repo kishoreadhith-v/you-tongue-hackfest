@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <%- include('partials/head') %>
+<body>
+    <%- include('partials/nav') %>
+    <h1>Signup</h1>
+    <form action="/signup" method="POST">
+        <div>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required>
+        </div>
+        <div>
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" required>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <div>
+            <label for="password2">Confirm Password</label>
+            <input type="password" name="password2" id="password2" required>
+        </div>
+        <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="/login">Login</a></p>
+</body>

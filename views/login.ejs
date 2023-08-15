@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <%- include('partials/head') %>
+<body>
+    <%- include('partials/nav') %>
+    <h1>Login</h1>
+    <% if(errorMessage){ %>
+        <p class="error"><%= errorMessage %></p>
+    <% } %>
+    <form action="/login" method="POST">
+        <div>
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" required>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <a href="/signup">Signup</a></p>
