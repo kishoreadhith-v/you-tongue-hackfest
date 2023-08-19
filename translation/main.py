@@ -7,6 +7,7 @@ import time
 import subprocess
 import sys
 import re
+import os
 
 def convert_timestamp(timestamp):
     # Split the timestamp into seconds and milliseconds parts
@@ -176,6 +177,15 @@ if __name__ == "__main__":
     output_video = f"translated_{sys.argv[1]}"
 
     combine_video_audio_srt(input_video, input_audio, input_srt, output_video)
+
+    # Delete intermediate files here
+    intermediate_files = ["output_audio.wav", "tmp.mp3", "file.wav", "final.wav", "output.srt", "output.txt", "pyrb_out.wav"]
+    for file in intermediate_files:
+        try:
+            os.remove(file)
+            print(f"Deleted: {file}")
+        except OSError as e:
+            print(f"Error deleting {file}: {e}")
 
 
     endTime = time.time()   
