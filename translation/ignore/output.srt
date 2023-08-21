@@ -1,0 +1,304 @@
+1
+0.70 --> 8.24
+ Hi, welcome to A2Zknowledge.com. This video is in language Tamil. If you want the same video in English, you can find the link in the description box of this video.
+
+2
+8.82 --> 15.44
+ Today we are going to see the topic of chatbot. I have already provided an introduction video on what is chatbot.
+
+3
+16.40 --> 25.68
+ You can watch that video in the playlist link. I have given the link separately. If you watch the introduction video, you will know what chatbot is.
+
+4
+25.68 --> 29.96
+ Now we are going to see a practical kickstart of chatbot.
+
+5
+30.78 --> 34.60
+ We are going to see how the chatbot responds to our voice.
+
+6
+34.60 --> 39.00
+ I am not going to do voice. I will upload videos in the future.
+
+7
+39.82 --> 43.50
+ Let's see this in Python.
+
+8
+43.70 --> 51.74
+ In Python, chatbot is already available. You have to install it.
+
+9
+51.74 --> 55.84
+ If you are using Python terminal, use pip command and install it.
+
+10
+56.06 --> 60.80
+ If you want to install it in PyCharm, go to settings in the file.
+
+11
+62.32 --> 67.82
+ Click on project interpreter and click on the plus symbol.
+
+12
+67.82 --> 70.12
+ If you want to install it, go to the top and click on chatbot.
+
+13
+71.64 --> 76.82
+ I am already installing it. Click on install package and it will be installed.
+
+14
+77.30 --> 79.98
+ You can do the same thing in other packages.
+
+15
+80.60 --> 85.24
+ Now we are going to see the code. It is a simple code.
+
+16
+96.32 --> 104.28
+ In import, you have to import from chatbot.rains import list trainer and from chatbot import chatbot.
+
+17
+106.40 --> 109.86
+ After importing, I have written some code.
+
+18
+110.52 --> 114.16
+ I have written a name for chatbot.
+
+19
+118.86 --> 120.52
+ I have written a file for the chatbot.
+
+20
+120.52 --> 128.88
+ I have written a file for the chatbot.
+
+21
+130.70 --> 134.92
+ I am going to show you that file.
+
+22
+136.18 --> 139.32
+ This is the predefined statement.
+
+23
+139.80 --> 146.00
+ This is the advanced level.
+
+24
+146.00 --> 147.56
+ I will upload the upcoming videos.
+
+25
+148.70 --> 153.64
+ If you receive the predefined content, it will give you the response.
+
+26
+154.26 --> 157.60
+ If you enter in this order, it will give you the response.
+
+27
+157.92 --> 159.88
+ You can also do this in the chatbot library.
+
+28
+161.38 --> 163.96
+ I have given this as a file.
+
+29
+164.16 --> 166.88
+ It will read the response and match the response.
+
+30
+168.06 --> 169.94
+ You can do this in the chatbot.
+
+31
+171.50 --> 177.28
+ Traditionally, chatbot works in voice and text.
+
+32
+179.50 --> 183.56
+ Today, many modern algorithms work in Google assist.
+
+33
+185.28 --> 189.68
+ I will show you a demo.
+
+34
+190.44 --> 192.26
+ I have given the motherfucking conversation.
+
+35
+192.86 --> 203.58
+ You have to call the function set underscore trainer and pass the list trainer.
+
+36
+204.32 --> 205.22
+ We have to import this.
+
+37
+206.32 --> 209.02
+ We have to train this.
+
+38
+209.32 --> 213.02
+ We have to train this.
+
+39
+213.06 --> 217.42
+ While true, the conversation content is while true.
+
+40
+217.62 --> 218.94
+ The request is input u.
+
+41
+219.60 --> 220.86
+ The console will display u.
+
+42
+221.86 --> 227.28
+ If I type something, the response is bot.getResponseRequest.
+
+43
+227.86 --> 230.26
+ I need a response for the request I have given.
+
+44
+230.26 --> 232.14
+ Print bot response.
+
+45
+232.16 --> 234.28
+ I will run this.
+
+46
+236.18 --> 240.46
+ If I type hi, it will give me hello.
+
+47
+240.74 --> 241.54
+ I have given the next response.
+
+48
+242.44 --> 245.24
+ I will type how are you.
+
+49
+249.22 --> 250.24
+ I am fine.
+
+50
+250.38 --> 253.70
+ I have typed how are you.
+
+51
+256.08 --> 259.68
+ I have set the opening time.
+
+52
+261.22 --> 261.22
+
+
+53
+261.42 --> 262.48
+ Morning 9am.
+
+54
+263.46 --> 265.98
+ If I type thanks, it will say welcome.
+
+55
+269.06 --> 275.54
+ If I type something, it will pick a random response.
+
+56
+276.52 --> 283.36
+ If I type y in, it will pick something.
+
+57
+283.36 --> 286.42
+ If I type something, it will pick a random response.
+
+58
+287.42 --> 288.78
+ I will type my name.
+
+59
+290.46 --> 292.72
+ This is what is written in chatter bot.
+
+60
+294.14 --> 299.00
+ If we typed something, it will pick something.
+
+61
+299.06 --> 305.46
+ If you write if else condition, you have to write a special condition.
+
+62
+305.86 --> 308.74
+ If you write if else condition, you have to write a special condition.
+
+63
+308.74 --> 308.88
+ If you type something, it will pick something.
+
+64
+308.88 --> 310.14
+ I will give the content I have.
+
+65
+311.20 --> 312.56
+ This is a basic library.
+
+66
+312.80 --> 315.06
+ I will give how to achieve something big.
+
+67
+319.12 --> 323.18
+ We can do a chat bot in this coding.
+
+68
+323.26 --> 325.50
+ We can load information for office environment.
+
+69
+327.84 --> 329.08
+ If user asks, we can give information.
+
+70
+329.86 --> 331.24
+ We can load information for office environment.
+
+71
+331.32 --> 333.14
+ Thanks for watching A2Zknowledge.com
+
+72
+333.14 --> 336.32
+ If you like this video, subscribe and forward it to your friends and colleagues.
+
+73
+336.32 --> 339.64
+ I will upload advanced chatter bot soon.
+
+74
+342.00 --> 345.04
+ We upload many technology videos in English and Tamil.
+
+75
+345.96 --> 349.16
+ Not only Python, there are many more languages and technologies.
+
+76
+349.76 --> 353.32
+ Thanks for watching A2Zknowledge.com
+
