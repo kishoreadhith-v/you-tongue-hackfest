@@ -8,6 +8,8 @@ import subprocess
 import sys
 import re
 import os
+from pytube import YouTube
+
 
 def convert_timestamp(timestamp):
     # Split the timestamp into seconds and milliseconds parts
@@ -78,11 +80,42 @@ def combine_video_audio_srt(input_video, input_audio, input_srt, output_video):
     except subprocess.CalledProcessError as e:
         print("Error occurred while combining video, audio, and subtitles:", e)
 
+def videoDownload(url):
+    # Create a YouTube object using the video URL
+    #'https://www.youtube.com/watch?v=Vp9bUxcKec8&list=LL&index=10'
+    yt = YouTube(url)
+
+    # Print video metadata
+    print("Title:", yt.title)
+    print("Author:", yt.author)
+    print("Duration:", yt.length, "seconds")
+
+    # Choose a stream to download (e.g., highest resolution)
+    stream = yt.streams.get_highest_resolution()
+
+    # Extract the file extension from the stream's mime_type
+    mime_type = stream.mime_type
+    file_extension = mime_type.split('/')[-1]
+
+    # Download the video
+    print("Downloading...")
+    stream.download(output_path= "./")
+    print("Download complete!\n")
+    return f"{yt.title}.{file_extension}"
+
+def clean_filename(filename):
+    # Replace special characters with an empty string
+    cleaned_filename = re.sub(r'[<>:"/\\|?*]', '', filename)
+    return cleaned_filename
+
+
 
 if __name__ == "__main__":
     startTime = time.time()
 
-    input_video_path = sys.argv[1] 
+    videoURL = sys.argv[1]
+    input_video_path = clean_filename(videoDownload(videoURL))
+    print(input_video_path, end="\n\n\n")
     output_audio_path = "output_audio.wav"
 
     extract_audio_from_video(input_video_path, output_audio_path)
@@ -171,10 +204,10 @@ if __name__ == "__main__":
         file.write(new_srt_content)
 
     ##############################
-    input_video = sys.argv[1]
+    input_video = input_video_path
     input_audio = "final.wav"
     input_srt = "output.srt"
-    output_video = f"translated_{sys.argv[1]}"
+    output_video = f"{input_video_path[:-4]}_translated{input_video_path[-4:]}" #input_video_path.replace("./", "./translated_")
 
     combine_video_audio_srt(input_video, input_audio, input_srt, output_video)
 
@@ -190,3 +223,6 @@ if __name__ == "__main__":
 
     endTime = time.time()   
     print("Total time taken: ", endTime - startTime)
+
+
+    # qwertyu
