@@ -1,0 +1,18 @@
+POST http://localhost:5173/login
+Content-Type: application/json
+
+{
+  "username": "w",
+  "password": "www"
+}
+
+###
+POST http://localhost:5173/api/video
+Content-Type: application/json
+
+{
+    "videoUrl": "https://youtu.be/ROSsHl4_7V0?si=uH557DcudO3kOhqw"
+}
+###
+GET http://localhost:5173/api/account
+'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGRhZWNiOTMzOGFmYzk0Yzg2NWVkOGIiLCJpYXQiOjE2OTI1MzcxMjcsImV4cCI6MTY5MjYyMzUyN30.iyFSrxTuBvx9YaRf7LyqE-kmeeC5wtojMe_mNeabvtc')}
