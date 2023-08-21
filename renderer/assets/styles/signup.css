@@ -1,0 +1,82 @@
+:root {
+    --main-bg-color: black;
+    --accent-color: red;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--main-bg-color);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column; /* Stacking elements vertically */
+}
+
+h1 {
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    font-size: 40px;
+}
+
+form {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center; /* Center form elements */
+   
+    
+}
+
+label, input {
+    display: block;
+    margin: 10px auto; /* Center horizontally */
+    color: white;
+    text-align: left; /* Align label text to the left */
+    font-size: 20px;
+    
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    
+    background-color: rgba(255, 255, 255, 0.1);
+    color: whitesmoke;
+    border-radius: 5px;
+    border: 1px solid var(--accent-color);
+    border-color: red;
+    height: 20px;
+}
+
+button {
+    
+    padding: 15px 30px; /* Larger padding for a larger button */
+    font-size: 22px; /* Larger font size */
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 30px auto; /* Center button horizontally */
+}
+
+
+button:hover {
+    background-color: rgba(255, 0, 0, 0.8);
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

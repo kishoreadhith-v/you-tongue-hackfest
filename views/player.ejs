@@ -5,5 +5,11 @@
     <%- include('partials/nav') %>
     <h1>YouTube Video Player</h1>
     <p><a href="/search">Back to Search</a></p>
+
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="video">
+        <button type="submit">Upload Video</button>
+      </form>
+      
 </body>
 </html>

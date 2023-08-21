@@ -23,9 +23,10 @@ async function videoInfo(url) {
     const info = await ytdl.getInfo(videoId);
 
     const videoInfo = {
+      videoId: videoId,
       title: info.videoDetails.title,
       author: info.videoDetails.author.name,
-      views: info.videoDetails.viewCount,
+      lengthSeconds: info.videoDetails.lengthSeconds,
     };
 
     return videoInfo;

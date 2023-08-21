@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <%- include('partials/head') %>
+      <head>
+    <link rel="stylesheet" type="text/css" href="./assets/styles/search.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+</head>
+<body>
+    <%- include('partials/nav') %>
+    <h1>Search for a YouTube Video</h1>
+    <form action="/video" method="post">
+        <label for="videoUrl">Enter a YouTube Video URL:</label>
+        <input type="text" id="videoUrl" name="videoUrl" required>
+        <button type="submit">Search</button>
+    </form>
+    <div class="video-info"></div>
+    <script src="./js/search.js"></script>
+</body>
+</html>

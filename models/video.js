@@ -10,6 +10,10 @@ const videoSchema = new Schema({
         type: String,
         required: true
     },
+    author : {
+        type: String,
+        required: true
+    },
     length : {
         type: Number,
         required: true
@@ -20,7 +24,7 @@ const videoSchema = new Schema({
     },
     tl : {
         type: String,
-        required: true
+        required: false
     },
     subExists : {
         type: Boolean,
@@ -28,7 +32,7 @@ const videoSchema = new Schema({
     },
     subtitles : {
         type: String,
-        required: true
+        required: false
     },
 }, { timestamps: true });
 

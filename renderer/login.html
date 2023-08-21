@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="./assets/styles/login.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+</head>
+    <%- include('partials/head') %> 
+<body>
+ 
+
+    <%- include('partials/nav') %>
+    <h1>Login</h1>
+    <% if(errorMessage){ %>
+        <p class="error"><%= errorMessage %></p>
+    <% } %>
+    <form id="loginForm">
+        <div>
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" required>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <button id="signup">Signup</button></p>
+    <script src="./js/login.js"></script>
+</body>

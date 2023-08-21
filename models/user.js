@@ -17,6 +17,10 @@ const userSchema = new Schema({
         type: Number,
         required: true
     },
+    unlockedVideos : {
+        type: Array,
+        required: true
+    },
 }, { timestamps: true });
 
 userSchema.plugin(passportLocalMongoose);
