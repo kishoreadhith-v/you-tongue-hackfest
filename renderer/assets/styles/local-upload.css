@@ -1,0 +1,38 @@
+/* styles.css */
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+}
+
+#videoInput {
+  display: block;
+  margin-bottom: 20px;
+}
+
+#dropZone {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+#dropZone.hover {
+  background-color: #f0f0f0;
+}
+
+#selectedPath {
+  font-size: 14px;
+  color: #333;
+  display: none;
+}
+
+#videoPlayer {
+  display: none;
+}
