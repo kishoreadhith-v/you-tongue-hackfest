@@ -9,6 +9,7 @@ import sys
 import re
 import os
 from pytube import YouTube
+import argparse
 
 
 def convert_timestamp(timestamp):
@@ -89,6 +90,7 @@ def videoDownload(url):
     print("Title:", yt.title)
     print("Author:", yt.author)
     print("Duration:", yt.length, "seconds")
+    print("video ID:", yt.video_id)
 
     # Choose a stream to download (e.g., highest resolution)
     stream = yt.streams.get_highest_resolution()
@@ -112,107 +114,146 @@ def clean_filename(filename):
 
 if __name__ == "__main__":
     startTime = time.time()
+    
+    parser = argparse.ArgumentParser(description='Translate a video.')
+    parser.add_argument('-y', '--youtube', type=str, help='link to the youtube video')
+    parser.add_argument('-l', '--local', type=str, help='path to the local video file')
+    parser.add_argument('-t', '--timed', action='store_true', help='print time taken')
+    parser.add_argument('-s', '--subtitles', action='store_true', help='generate subtitles and transcript only')
+    parser.add_argument('-a', '--audio', action='store_true', help='generate translated audio')
+    parser.add_argument('-v', '--video', action='store_true', help='generate translated video')
+    parser.add_argument('id', '--video_id', type=str, help='video id')
+    args = parser.parse_args()
+    link = args.youtube
+    local = args.local
+    timed = args.timed
+    subtitles = args.subtitles
+    audio = args.audio
+    video = args.video
+    video_id = args.video_id
 
-    videoURL = sys.argv[1]
-    input_video_path = clean_filename(videoDownload(videoURL))
+    intermediate_files = []
+
+    if link:
+        input_video_path = clean_filename(videoDownload(link))
+    
+    if local:
+        input_video_path = local
+
     print(input_video_path, end="\n\n\n")
-    output_audio_path = "output_audio.wav"
 
+    output_audio_path = "originalAudio.wav"
     extract_audio_from_video(input_video_path, output_audio_path)
 
-    model = whisper.load_model("medium")
-    result = model.transcribe("output_audio.wav", task = "translate",  word_timestamps = True)
+    if subtitles or audio or video:
+        model = whisper.load_model("medium")
+        result = model.transcribe("originalAudio.wav", task = "translate",  word_timestamps = True)
 
 
-    with open("output.txt", "w") as txt_file:
-        txt_file.write(result["text"])
+        transcriptFile = f"{input_video_path[:-4]}_transcript.txt"
+        with open(transcriptFile, "w") as txt_file:
+            txt_file.write(result["text"])
 
-    data = result
-    srt_content = generate_srt_from_segments(data["segments"])
-    # Write the SRT content to a file
-    with open("output.srt", "w") as srt_file:
-        srt_file.write(srt_content)
+        srtFile = f"{input_video_path[:-4]}_subtitles.srt"
+        data = result
+        srt_content = generate_srt_from_segments(data["segments"])
+        # Write the SRT content to a file
+        with open(srtFile, "w") as srt_file:
+            srt_file.write(srt_content)
 
-    # Read text from file
-    input_text_file = 'output.srt'
-    with open(input_text_file, 'r', encoding='utf-8') as file:
-        text = file.readlines()
+        intermediate_files.append("originalAudio.wav")
 
-    current = [0.00, 0.00] # start and end time of current subtitle
-    previous = [0.00, 0.00] # start and end time of previous subtitle
-    total = AudioSegment.empty()
+############################################
 
-    for i in range(0, len(text), 4):
-        #print(text[i].rstrip("\n"), text[i + 2])
-        current = [float(j) for j in text[i + 1].rstrip('\n').split(' --> ')]
-        blank = current[0] - previous[1]   # blank time
+    if audio or video:
+        # Read text from file
+        input_text_file = srtFile
+        with open(input_text_file, 'r', encoding='utf-8') as file:
+            text = file.readlines()
 
-        if blank > 0:
-            # print('blank time: ', blank)
-            total += AudioSegment.silent(duration = blank*1000)
+        current = [0.00, 0.00] # start and end time of current subtitle
+        previous = [0.00, 0.00] # start and end time of previous subtitle
+        total = AudioSegment.empty()
 
-        # Generate audio
-        if text[i + 2] == '\n' or text[i + 2] == '' or text[i + 2] == 'music\n':
-            total += AudioSegment.silent(duration = (current[1] - current[0])*1000)
+        for i in range(0, len(text), 4):
+            #print(text[i].rstrip("\n"), text[i + 2])
+            current = [float(j) for j in text[i + 1].rstrip('\n').split(' --> ')]
+            blank = current[0] - previous[1]   # blank time
 
-        else:
-            tts = gTTS(text[i + 2], lang='en-GB')
-            tts.save("tmp.mp3")
+            if blank > 0:
+                # print('blank time: ', blank)
+                total += AudioSegment.silent(duration = blank*1000)
 
-            generated_audio = AudioSegment.from_mp3("tmp.mp3")
-            generated_audio_duration = generated_audio.duration_seconds
-            required_audio_duration = current[1] - current[0]
-            #print(generated_audio_duration, required_audio_duration)
+            # Generate audio
+            if text[i + 2] == '\n' or text[i + 2] == '' or text[i + 2] == 'music\n':
+                total += AudioSegment.silent(duration = (current[1] - current[0])*1000)
 
-            # Hardcoded input audio file name
-            input_audio_file = "tmp.mp3"
+            else:
+                tts = gTTS(text[i + 2], lang='en-GB')
+                tts.save("tmp.mp3")
 
-            # Convert the input audio to WAV format
-            sound = AudioSegment.from_mp3(input_audio_file)
-            sound.export("file.wav", format="wav")
-            # Read the WAV file
-            y, sr = sf.read("file.wav")
+                generated_audio = AudioSegment.from_mp3("tmp.mp3")
+                generated_audio_duration = generated_audio.duration_seconds
+                required_audio_duration = current[1] - current[0]
+                #print(generated_audio_duration, required_audio_duration)
 
-            # Stretch the audio
-            stretch_factor = required_audio_duration / generated_audio_duration
-            y_stretch = pyrb.time_stretch(y, sr, 1/stretch_factor)
+                # Hardcoded input audio file name
+                input_audio_file = "tmp.mp3"
 
-            # Save the stretched audio as "pyrbout.wav"
-            output_audio_file = "pyrb_out.wav"
-            sf.write(output_audio_file, y_stretch, sr, format='wav')
-            # print('Audio stretched by a factor of ', stretch_factor)
+                # Convert the input audio to WAV format
+                sound = AudioSegment.from_mp3(input_audio_file)
+                sound.export("file.wav", format="wav")
+                # Read the WAV file
+                y, sr = sf.read("file.wav")
 
-            total += AudioSegment.from_wav(output_audio_file)
+                # Stretch the audio
+                stretch_factor = required_audio_duration / generated_audio_duration
+                y_stretch = pyrb.time_stretch(y, sr, 1/stretch_factor)
+
+                # Save the stretched audio as "pyrbout.wav"
+                output_audio_file = "pyrb_out.wav"
+                sf.write(output_audio_file, y_stretch, sr, format='wav')
+                # print('Audio stretched by a factor of ', stretch_factor)
+
+                total += AudioSegment.from_wav(output_audio_file)
 
 
-        previous = current
+            previous = current
 
-    total.export("final.wav", format="wav")
-    ##############################
-
-    input_file_path = "output.srt"  # Replace with the path to your SRT file
-    
-    # Read the content of the SRT file
-    with open(input_file_path, 'r') as file:
-        srt_content = file.read()
-
-    # Find and replace the timestamps using regular expressions
-    new_srt_content = re.sub(r'(\d+\.\d+) --> (\d+\.\d+)', lambda m: f"{convert_timestamp(m.group(1))} --> {convert_timestamp(m.group(2))}", srt_content)
-
-    # Write the modified content back to the same file
-    with open(input_file_path, 'w') as file:
-        file.write(new_srt_content)
+        audioFile = f"{input_video_path[:-4]}_audio.wav"
+        total.export(audioFile, format="wav")
+        intermediate_files.extend(["tmp.mp3", "file.wav", "pyrb_out.wav"])
 
     ##############################
-    input_video = input_video_path
-    input_audio = "final.wav"
-    input_srt = "output.srt"
-    output_video = f"{input_video_path[:-4]}_translated{input_video_path[-4:]}" #input_video_path.replace("./", "./translated_")
 
-    combine_video_audio_srt(input_video, input_audio, input_srt, output_video)
+    if subtitles or audio or video:     
+        input_file_path = srtFile  # Replace with the path to your SRT file
+        
+        # Read the content of the SRT file
+        with open(input_file_path, 'r') as file:
+            srt_content = file.read()
+
+        # Find and replace the timestamps using regular expressions
+        new_srt_content = re.sub(r'(\d+\.\d+) --> (\d+\.\d+)', lambda m: f"{convert_timestamp(m.group(1))} --> {convert_timestamp(m.group(2))}", srt_content)
+
+        # Write the modified content back to the same file
+        with open(input_file_path, 'w') as file:
+            file.write(new_srt_content)
+
+    ##############################
+
+    if video:
+        input_video = input_video_path
+        input_audio = audioFile
+        input_srt = srtFile
+        if link:
+            output_video = f"./translated-videos/{video_id}.mp4"
+            intermediate_files.extend([input_video_path, audioFile, srtFile, transcriptFile])
+        if local:
+            output_video = f"{input_video_path[:-4]}_translated{input_video_path[-4:]}" #input_video_path.replace("./", "./translated_")
+        combine_video_audio_srt(input_video, input_audio, input_srt, output_video)        
 
     # Delete intermediate files here
-    intermediate_files = ["output_audio.wav", "tmp.mp3", "file.wav", "final.wav", "output.srt", "output.txt", "pyrb_out.wav"]
     for file in intermediate_files:
         try:
             os.remove(file)
@@ -222,4 +263,6 @@ if __name__ == "__main__":
 
 
     endTime = time.time()   
-    print("Total time taken: ", endTime - startTime)
+    
+    if timed:
+        print("Total time taken: ", endTime - startTime)
