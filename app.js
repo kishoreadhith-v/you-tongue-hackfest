@@ -13,6 +13,7 @@ const jwt = require("jsonwebtoken");
 const { downloadVideo, videoInfo } = require("./downloader");
 const path = require("path");
 const fs = require("fs");
+const user = require("./models/user");
 
 // localhost port
 const port = 5173;
@@ -94,7 +95,6 @@ app.post("/api/signup", async (req, res) => {
       username: req.body.username,
       email: req.body.email,
       points: 0,
-      unlockedVideos: {},
     });
     User.register(newUser, req.body.password, (err, user) => {
       if (err) {
@@ -211,7 +211,7 @@ app.post("/api/new-tl", async (req, res) => {
         userId,
         {
           $inc: { points: videoLength },
-          $addToSet: { translations: videoId },
+          $addToSet: { translations: video },
         },
         { new: true }
       );
@@ -223,7 +223,7 @@ app.post("/api/new-tl", async (req, res) => {
       return res.json({ success: false, message: "Error finding user" });
     }
 
-    res.json({ success: true, video: savedVideo, user: user });
+    res.json({ success: true, video: video, user: user });
   } catch (err) {
     console.error(err);
     res.json({ success: false, message: "An error occurred" });
@@ -257,11 +257,30 @@ app.post("/api/unlock-video", async (req, res) => {
       return res.json({ success: false, message: "Video already unlocked" });
     }
     user.points -= cost;
-    user.unlockedVideos.push(videoId);
+    user.unlockedVideos.push(video);
     const savedUser = await user.save();
     res.json({ success: true, user: savedUser });
   } catch (error) {
     console.error(err);
+    res.json({ success: false, message: "An error occurred" });
+  }
+});
+
+app.get("/api/list-videos/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.json({ success: false, message: "Error finding user" });
+    }
+    return res.json({
+      success: true,
+      unlocked: user.unlockedVideos,
+      translated: user.translations,
+    });
+  } catch (error) {
+    console.error(error);
     res.json({ success: false, message: "An error occurred" });
   }
 });
