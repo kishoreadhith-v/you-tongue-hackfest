@@ -36,6 +36,7 @@
 const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const path = require("path");
 const { PythonShell } = require("python-shell");
+const {exec} = require("child_process");
 
 // const { downloadVideo, videoInfo } = require("./downloader.js");
 
@@ -45,6 +46,7 @@ const isMac = process.platform === "darwin";
 const root = "http://localhost:5173/";
 
 let mainWindow;
+
 
 // create the main window
 
@@ -116,15 +118,76 @@ ipcMain.on("showLoginForm", (event, data) => {
 });
 
 ipcMain.on("local-upload-srt", (event, videoPath) => {
-  console.log("SRT: ", videoPath);
+  const shell_string = `python3 ./translate.py -l ${videoPath} -s 2> warning.txt`;
+  exec(shell_string, (error, stdout, stderr) => {
+    if (error) {
+      console.log(`error: ${error.message}`);
+      mainWindow.webContents.send("showWarning", error.message);
+      return;
+    }
+    if (stderr) {
+      console.log(`stderr: ${stderr}`);
+      mainWindow.webContents.send("showWarning", stderr);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+
+  });
+  
 });
 
 ipcMain.on("local-upload-audio", (event, videoPath) => {
-  console.log("audio: ", videoPath);
+  const shell_string = `python3 ./translate.py -l ${videoPath} -a 2> warning.txt`;
+  exec(shell_string, (error, stdout, stderr) => {
+    if (error) {
+      console.log(`error: ${error.message}`);
+      mainWindow.webContents.send("showWarning", error.message);
+      return;
+    }
+    if (stderr) {
+      console.log(`stderr: ${stderr}`);
+      mainWindow.webContents.send("showWarning", stderr);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    
+  });
 });
 
 ipcMain.on("local-upload-video", (event, videoPath) => {
-  console.log("video: ", videoPath);
+  const shell_string = `python3 ./translate.py -l ${videoPath} -v 2> warning.txt`;
+  exec(shell_string, (error, stdout, stderr) => {
+    if (error) {
+      console.log(`error: ${error.message}`);
+      mainWindow.webContents.send("showWarning", error.message);
+      return;
+    }
+    if (stderr) {
+      console.log(`stderr: ${stderr}`);
+      mainWindow.webContents.send("showWarning", stderr);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    
+  });
+});
+
+ipcMain.on("translate-yt-video", (event, videoUrl) => {
+  const shell_string = `python3 ./translate.py -y ${videoUrl} -v 2> warning.txt`;
+  exec(shell_string, (error, stdout, stderr) => {
+    if (error) {
+      console.log(`error: ${error.message}`);
+      mainWindow.webContents.send("showWarning", error.message);
+      return;
+    }
+    if (stderr) {
+      console.log(`stderr: ${stderr}`);
+      mainWindow.webContents.send("showWarning", stderr);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    
+  });
 });
 
 // app is ready

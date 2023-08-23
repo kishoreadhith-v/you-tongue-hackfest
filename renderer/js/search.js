@@ -35,7 +35,9 @@ window.addEventListener('DOMContentLoaded', () => {
                     const tlBtn = document.createElement('button');
                     tlBtn.textContent = 'Translate';
                     videoInfoContainer.appendChild(tlBtn);
-                    tlBtn.addEventListener('click', )
+                    tlBtn.addEventListener('click', () => {
+                        ipcRenderer.send('translate-yt-video', videoUrl);
+                    });
                 }
             } else {
                 console.error('Error:', response.statusText);
