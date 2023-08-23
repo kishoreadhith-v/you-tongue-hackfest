@@ -35,6 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     const tlBtn = document.createElement('button');
                     tlBtn.textContent = 'Translate';
                     videoInfoContainer.appendChild(tlBtn);
+                    tlBtn.addEventListener('click', )
                 }
             } else {
                 console.error('Error:', response.statusText);
