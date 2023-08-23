@@ -35,6 +35,7 @@
 
 const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const path = require("path");
+const { PythonShell } = require("python-shell");
 
 // const { downloadVideo, videoInfo } = require("./downloader.js");
 
@@ -112,6 +113,18 @@ ipcMain.on("navigate", (event, pageName) => {
 
 ipcMain.on("showLoginForm", (event, data) => {
   mainWindow.webContents.send("showLoginForm", data);
+});
+
+ipcMain.on("local-upload-srt", (event, videoPath) => {
+  console.log("SRT: ", videoPath);
+});
+
+ipcMain.on("local-upload-audio", (event, videoPath) => {
+  console.log("audio: ", videoPath);
+});
+
+ipcMain.on("local-upload-video", (event, videoPath) => {
+  console.log("video: ", videoPath);
 });
 
 // app is ready
