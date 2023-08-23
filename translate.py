@@ -10,6 +10,9 @@ import re
 import os
 from pytube import YouTube
 import argparse
+import warnings
+from numba.core.errors import NumbaDeprecationWarning
+
 
 
 def convert_timestamp(timestamp):
@@ -52,10 +55,11 @@ def extract_audio_from_video(input_video_path, output_audio_path):
 
     try:
         # Run the ffmpeg command
-        subprocess.run(ffmpeg_cmd, check=True)
-        print("\n\n\nAudio extraction successful.\n From: {}\n To: {}".format(input_video_path, output_audio_path))
+        #subprocess.run(ffmpeg_cmd, check=True)
+        subprocess.run(ffmpeg_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print("Audio extraction successful.\n From: {}\n To: {}".format(input_video_path, output_audio_path))
     except subprocess.CalledProcessError as e:
-        print("\n\n\nError occurred while extracting audio:", e)
+        print("Error occurred while extracting audio:", e)
 
 def combine_video_audio_srt(input_video, input_audio, input_srt, output_video):
     # FFmpeg command to combine video, audio, and SRT
@@ -113,8 +117,32 @@ def clean_filename(filename):
 
 
 if __name__ == "__main__":
+
+    # Filter out specific warnings
+    warnings.filterwarnings("ignore", category=UserWarning, message="FP16 is not supported on CPU")
+    warnings.filterwarnings("ignore", category=UserWarning, message="Word-level timestamps on translations may not be reliable")
+    warnings.simplefilter("ignore", category=NumbaDeprecationWarning)
+
+
     startTime = time.time()
     
+    helpMessage = """usage: script_name.py [-h] [-y YOUTUBE] [-l LOCAL] [-t] [-s] [-a] [-v] [-id VIDEO_ID]
+
+Translate a video.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -y YOUTUBE, --youtube YOUTUBE
+                        link to the youtube video
+  -l LOCAL, --local LOCAL
+                        path to the local video file
+  -t, --timed           print time taken
+  -s, --subtitles       generate subtitles and transcript only
+  -a, --audio           generate translated audio
+  -v, --video           generate translated video
+  -id VIDEO_ID, --video_id VIDEO_ID
+                        video id
+    """
     parser = argparse.ArgumentParser(description='Translate a video.')
     parser.add_argument('-y', '--youtube', type=str, help='link to the youtube video')
     parser.add_argument('-l', '--local', type=str, help='path to the local video file')
@@ -122,7 +150,9 @@ if __name__ == "__main__":
     parser.add_argument('-s', '--subtitles', action='store_true', help='generate subtitles and transcript only')
     parser.add_argument('-a', '--audio', action='store_true', help='generate translated audio')
     parser.add_argument('-v', '--video', action='store_true', help='generate translated video')
-    parser.add_argument('id', '--video_id', type=str, help='video id')
+    parser.add_argument('-id', '--video_id', type=str, help='video id')
+    parser.add_argument('-hm', '--helpme', action='help', default=argparse.SUPPRESS, help = helpMessage)
+
     args = parser.parse_args()
     link = args.youtube
     local = args.local
@@ -132,6 +162,7 @@ if __name__ == "__main__":
     video = args.video
     video_id = args.video_id
 
+
     intermediate_files = []
 
     if link:
@@ -140,7 +171,7 @@ if __name__ == "__main__":
     if local:
         input_video_path = local
 
-    print(input_video_path, end="\n\n\n")
+    #print(input_video_path, end="\n\n\n")
 
     output_audio_path = "originalAudio.wav"
     extract_audio_from_video(input_video_path, output_audio_path)
@@ -266,3 +297,4 @@ if __name__ == "__main__":
     
     if timed:
         print("Total time taken: ", endTime - startTime)
+    warnings.resetwarnings()
