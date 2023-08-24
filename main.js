@@ -36,13 +36,11 @@
 const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const path = require("path");
 // const { PythonShell } = require("python-shell");
-const {exec} = require("child_process");
-const fs = require('fs');
+const { exec } = require("child_process");
+const fs = require("fs");
 
 // The path to the result JSON file
-const filePath = '/result.json';
-
-
+const filePath = "/result.json";
 
 // const { downloadVideo, videoInfo } = require("./downloader.js");
 
@@ -52,7 +50,6 @@ const isMac = process.platform === "darwin";
 const root = "http://localhost:5173/";
 
 let mainWindow;
-
 
 // create the main window
 
@@ -124,7 +121,7 @@ ipcMain.on("showLoginForm", (event, data) => {
 });
 
 ipcMain.on("local-upload-srt", (event, videoPath) => {
-  const pythonCommand = '"C:\\Program\ Files\\Python311\\python.exe"';
+  const pythonCommand = '"C:\\Program Files\\Python311\\python.exe"';
   const shell_string = `${pythonCommand} ./translate.py -l ${videoPath} -s 2> warning.txt`;
   exec(shell_string, (error, stdout, stderr) => {
     if (error) {
@@ -138,13 +135,11 @@ ipcMain.on("local-upload-srt", (event, videoPath) => {
       return;
     }
     console.log(`stdout: ${stdout}`);
-
   });
-  
 });
 
 ipcMain.on("local-upload-audio", (event, videoPath) => {
-  const pythonCommand = '"C:\\Program\ Files\\Python311\\python.exe"';
+  const pythonCommand = '"C:\\Program Files\\Python311\\python.exe"';
   const shell_string = `${pythonCommand} ./translate.py -l ${videoPath} -a 2> warning.txt`;
   exec(shell_string, (error, stdout, stderr) => {
     if (error) {
@@ -158,12 +153,11 @@ ipcMain.on("local-upload-audio", (event, videoPath) => {
       return;
     }
     console.log(`stdout: ${stdout}`);
-    
   });
 });
 
 ipcMain.on("local-upload-video", (event, videoPath) => {
-  const pythonCommand = '"C:\\Program\ Files\\Python311\\python.exe"';
+  const pythonCommand = '"C:\\Program Files\\Python311\\python.exe"';
   const shell_string = `${pythonCommand} ./translate.py -l ${videoPath} -v 2> warning.txt`;
   exec(shell_string, (error, stdout, stderr) => {
     if (error) {
@@ -177,13 +171,13 @@ ipcMain.on("local-upload-video", (event, videoPath) => {
       return;
     }
     console.log(`stdout: ${stdout}`);
-    
   });
 });
 
 ipcMain.on("translate-yt-video", (event, videoUrl, videoId) => {
-  const pythonCommand = '"C:\\Program\ Files\\Python311\\python.exe"';
+  const pythonCommand = '"C:\\Program Files\\Python311\\python.exe"';
   const shell_string = `${pythonCommand} ./translate.py -y ${videoUrl} -id ${videoId} -v > warning.txt 2>&1`;
+  const test_string = `${pythonCommand} ./hello.py -y ${videoUrl} -id ${videoId} -v > warning.txt 2>&1`;
   console.log(shell_string);
   exec(shell_string, (error, stdout, stderr) => {
     if (error) {
@@ -197,34 +191,35 @@ ipcMain.on("translate-yt-video", (event, videoUrl, videoId) => {
       return;
     }
     console.log(`stdout: ${stdout}`);
-    const filePath = '/result.json';
+    const filePath = "/result.json";
 
-// Function to read and process the file
-function readAndProcessFile() {
-  fs.readFile(filePath, 'utf-8', (error, data) => {
-    if (error) {
-      console.error('Error reading file:', error);
-      return;
+    // Function to read and process the file
+    function readAndProcessFile() {
+      fs.readFile(filePath, "utf-8", (error, data) => {
+        if (error) {
+          console.error("Error reading file:", error);
+          return;
+        }
+
+        try {
+          const jsonData = JSON.parse(data);
+          console.log("Parsed JSON data:", jsonData);
+          if (jsonData.success) {
+            mainWindow.webContents.send(
+              "showWarning",
+              "Translation successful"
+            );
+          }
+        } catch (parseError) {
+          console.error("Error parsing JSON:", parseError);
+        }
+      });
     }
 
-    try {
-      const jsonData = JSON.parse(data);
-      console.log('Parsed JSON data:', jsonData);
-      if (jsonData.success) {
-        mainWindow.webContents.send("showWarning", "Translation successful");
-      }
-    } catch (parseError) {
-      console.error('Error parsing JSON:', parseError);
-    }
+    // Poll the file periodically
+    const pollInterval = 5000; // Poll every 5 seconds
+    setInterval(readAndProcessFile, pollInterval);
   });
-}
-
-// Poll the file periodically
-const pollInterval = 5000; // Poll every 5 seconds
-setInterval(readAndProcessFile, pollInterval);
-
-  });
-
 });
 
 // app is ready
