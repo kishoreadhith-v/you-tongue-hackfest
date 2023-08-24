@@ -178,6 +178,7 @@ ipcMain.on("local-upload-video", (event, videoPath) => {
 ipcMain.on("translate-yt-video", (event, videoUrl, videoId) => {
   const pythonCommand = '"C:\\Program\ Files\\Python311\\python.exe"';
   const shell_string = `${pythonCommand} ./translate.py -y ${videoUrl} -id ${videoId} -v > warning.txt 2>&1`;
+  console.log(shell_string);
   exec(shell_string, (error, stdout, stderr) => {
     if (error) {
       console.log(`error: ${error.message}`);
@@ -190,8 +191,27 @@ ipcMain.on("translate-yt-video", (event, videoUrl, videoId) => {
       return;
     }
     console.log(`stdout: ${stdout}`);
-    
+    const filePath = '/result.json';
+
+fs.readFile(filePath, 'utf-8', (error, data) => {
+  if (error) {
+    console.error('Error reading file:', error);
+    return;
+  }
+
+  try {
+    const jsonData = JSON.parse(data);
+    console.log('Parsed JSON data:', jsonData);
+    if(jsonData.success){
+      mainWindow.webContents.send("showWarning", "Translation successful");
+    }
+  } catch (parseError) {
+    console.error('Error parsing JSON:', parseError);
+  }
+});
+
   });
+
 });
 
 // app is ready

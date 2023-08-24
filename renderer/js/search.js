@@ -15,11 +15,11 @@ window.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({ videoUrl })
             });
-
+            console.log("post req made");
             if (response.ok) {
                 const data = await response.json();
                 const videoInfo = data.video;
-
+                console.log(videoInfo)
                 // Display video information on the page
                 videoInfoContainer.innerHTML = `
                     <h2>Video Information:</h2>
@@ -36,6 +36,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     tlBtn.textContent = 'Translate';
                     videoInfoContainer.appendChild(tlBtn);
                     tlBtn.addEventListener('click', () => {
+                        console.log(videoInfo.videoId)
                         ipcRenderer.send('translate-yt-video', videoUrl, videoInfo.videoId);
                     });
                 }
