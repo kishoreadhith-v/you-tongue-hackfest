@@ -1,5 +1,6 @@
 {
-    "success": true,
-    "videoId": "V8sdasdfasdf", 
-    "videoPath": "/translated-videos/V8sdasdfasdf.mp4"
+    "succes": true,
+    "videoID": "undefined",
+    "videoPath": "./translated-videos/undefined.mp4",
+    "runTime": 1015.4196758270264
 }

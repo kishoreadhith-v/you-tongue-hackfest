@@ -13,6 +13,7 @@ import argparse
 import warnings
 from numba.core.errors import NumbaDeprecationWarning
 from tqdm import tqdm
+import json
 
 
 
@@ -109,7 +110,7 @@ def videoDownload(url):
     #print("Downloading...")
     stream.download(output_path= "./")
     #print("Download complete!\n")
-    return f"{yt.title}.{file_extension}"
+    return (f"{yt.title}.{file_extension}", yt.video_id)
 
 def clean_filename(filename):
     # Replace special characters with an empty string
@@ -171,7 +172,8 @@ optional arguments:
     intermediate_files = []
 
     if link:
-        input_video_path = clean_filename(videoDownload(link))
+        dirty_input_video_path, videoID = videoDownload(link)
+        input_video_path = clean_filename(dirty_input_video_path)
     
     if local:
         input_video_path = local
@@ -329,7 +331,14 @@ optional arguments:
         print("Total time taken: ", endTime - startTime)
 
     print(video_id, end = '')
+
+    dumpFile = {
+        "succes" : True,
+        "videoID" : video_id,
+        "videoPath" : output_video,
+        "runTime" : endTime - startTime
+    }
     with open("result.json", "w") as f:
-        f.write(f"{video_id}\n
+        json.dump(dumpFile, f, indent = 4)
 
     warnings.resetwarnings()
