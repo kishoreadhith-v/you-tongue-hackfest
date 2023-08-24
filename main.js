@@ -138,7 +138,8 @@ ipcMain.on("local-upload-srt", (event, videoPath) => {
 });
 
 ipcMain.on("local-upload-audio", (event, videoPath) => {
-  const shell_string = `python3 ./translate.py -l ${videoPath} -a 2> warning.txt`;
+  const pythonCommand = '"C:\\Program\ Files\\Python311\\python.exe"';
+  const shell_string = `${pythonCommand} ./translate.py -l ${videoPath} -a 2> warning.txt`;
   exec(shell_string, (error, stdout, stderr) => {
     if (error) {
       console.log(`error: ${error.message}`);
@@ -156,7 +157,8 @@ ipcMain.on("local-upload-audio", (event, videoPath) => {
 });
 
 ipcMain.on("local-upload-video", (event, videoPath) => {
-  const shell_string = `python3 ./translate.py -l ${videoPath} -v 2> warning.txt`;
+  const pythonCommand = '"C:\\Program\ Files\\Python311\\python.exe"';
+  const shell_string = `${pythonCommand} ./translate.py -l ${videoPath} -v 2> warning.txt`;
   exec(shell_string, (error, stdout, stderr) => {
     if (error) {
       console.log(`error: ${error.message}`);
@@ -174,7 +176,8 @@ ipcMain.on("local-upload-video", (event, videoPath) => {
 });
 
 ipcMain.on("translate-yt-video", (event, videoUrl) => {
-  const shell_string = `python3 ./translate.py -y ${videoUrl} -v 2> warning.txt`;
+  const pythonCommand = '"C:\\Program\ Files\\Python311\\python.exe"';
+  const shell_string = `${pythonCommand} ./translate.py -y ${videoUrl} -v > warning.txt 2>&1`;
   exec(shell_string, (error, stdout, stderr) => {
     if (error) {
       console.log(`error: ${error.message}`);

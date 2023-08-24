@@ -327,4 +327,9 @@ optional arguments:
     
     if timed:
         print("Total time taken: ", endTime - startTime)
+
+    print(video_id, end = '')
+    with open("result.json", "w") as f:
+        f.write(f"{video_id}\n
+
     warnings.resetwarnings()
