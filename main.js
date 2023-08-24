@@ -175,9 +175,9 @@ ipcMain.on("local-upload-video", (event, videoPath) => {
   });
 });
 
-ipcMain.on("translate-yt-video", (event, videoUrl) => {
+ipcMain.on("translate-yt-video", (event, videoUrl, videoId) => {
   const pythonCommand = '"C:\\Program\ Files\\Python311\\python.exe"';
-  const shell_string = `${pythonCommand} ./translate.py -y ${videoUrl} -v > warning.txt 2>&1`;
+  const shell_string = `${pythonCommand} ./translate.py -y ${videoUrl} -id ${videoId} -v > warning.txt 2>&1`;
   exec(shell_string, (error, stdout, stderr) => {
     if (error) {
       console.log(`error: ${error.message}`);
