@@ -149,6 +149,8 @@ app.get("/api/account", async (req, res) => {
       username: user.username,
       email: user.email,
       points: user.points,
+      unlockedVideos: user.unlockedVideos,
+      translations: user.translations,
     });
   } catch (error) {
     return res.status(401).json({ error: "Invalid token" });
@@ -193,7 +195,16 @@ app.post("/api/video", async (req, res) => {
 
 app.post("/api/new-tl", async (req, res) => {
   try {
-    const { videoId, tl, userId } = req.body;
+    const { videoId, tl, runTime } = req.body;
+    if (!req.headers.authorization) {
+      return res.status(401).json({ error: "Authorization token missing" });
+    }
+
+    const decodedToken = jwt.verify(
+      req.headers.authorization.split(" ")[1],
+      process.env.SESSION_SECRET
+    );
+    const userId = decodedToken.userId;
 
     const video = await Video.findOne({ videoId: videoId });
     if (!video) {
@@ -205,12 +216,10 @@ app.post("/api/new-tl", async (req, res) => {
       video.tl = tl;
       const savedVideo = await video.save();
 
-      const videoLength = Math.round(savedVideo.length);
-
       const user = await User.findByIdAndUpdate(
         userId,
         {
-          $inc: { points: videoLength },
+          $inc: { points: runTime },
           $addToSet: { translations: video },
         },
         { new: true }

@@ -1,6 +1,3 @@
 {
-    "succes": true,
-    "videoID": "TjJLIuFKA20",
-    "videoPath": "./translated-videos/TjJLIuFKA20.mp4",
-    "runTime": 269.6693193912506
+    "message": "I am a test string"
 }
