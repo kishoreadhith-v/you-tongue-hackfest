@@ -164,7 +164,7 @@ optional arguments:
     subtitles = args.subtitles
     audio = args.audio
     video = args.video
-    video_id = args.video_id
+    #video_id = args.video_id
 
     total_tasks = 6
     overall_progress_bar = tqdm(total=total_tasks, desc="Overall Progress", position=0)
@@ -172,7 +172,7 @@ optional arguments:
     intermediate_files = []
 
     if link:
-        dirty_input_video_path, videoID = videoDownload(link)
+        dirty_input_video_path, video_id = videoDownload(link)
         input_video_path = clean_filename(dirty_input_video_path)
     
     if local:
