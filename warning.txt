@@ -1,0 +1,3 @@
+C:\Users\dell_\AppData\Roaming\Python\Python311\site-packages\whisper\timing.py:57: NumbaDeprecationWarning: [1mThe 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.[0m
+  @numba.jit
+Overall Progress:   0%|          | 0/6 [00:00<?, ?it/s]Overall Progress:  33%|###3      | 2/6 [00:42<01:24, 21.14s/it]Overall Progress: 100%|##########| 6/6 [00:42<00:00,  7.05s/it]

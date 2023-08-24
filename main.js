@@ -56,7 +56,7 @@ function createMainWindow() {
       width: 800,
       height: 600,
       webPreferences: {
-        nodeIntegration: false,
+        nodeIntegration: true,
         contextIsolation: true,
         preload: path.join(__dirname, "preload.js"),
       },
@@ -118,7 +118,8 @@ ipcMain.on("showLoginForm", (event, data) => {
 });
 
 ipcMain.on("local-upload-srt", (event, videoPath) => {
-  const shell_string = `python3 ./translate.py -l ${videoPath} -s 2> warning.txt`;
+  const pythonCommand = '"C:\\Program\ Files\\Python311\\python.exe"';
+  const shell_string = `${pythonCommand} ./translate.py -l ${videoPath} -s 2> warning.txt`;
   exec(shell_string, (error, stdout, stderr) => {
     if (error) {
       console.log(`error: ${error.message}`);

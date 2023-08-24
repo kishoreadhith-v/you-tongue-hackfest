@@ -6,12 +6,13 @@ import soundfile as sf
 import time
 import subprocess
 import sys
-import re
 import os
+import re
 from pytube import YouTube
 import argparse
 import warnings
 from numba.core.errors import NumbaDeprecationWarning
+from tqdm import tqdm
 
 
 
@@ -57,7 +58,7 @@ def extract_audio_from_video(input_video_path, output_audio_path):
         # Run the ffmpeg command
         #subprocess.run(ffmpeg_cmd, check=True)
         subprocess.run(ffmpeg_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        print("Audio extraction successful.\n From: {}\n To: {}".format(input_video_path, output_audio_path))
+        #print("Audio extraction successful.\n From: {}\n To: {}".format(input_video_path, output_audio_path))
     except subprocess.CalledProcessError as e:
         print("Error occurred while extracting audio:", e)
 
@@ -80,8 +81,9 @@ def combine_video_audio_srt(input_video, input_audio, input_srt, output_video):
 
     try:
         # Run the FFmpeg command
-        subprocess.run(ffmpeg_cmd, check=True)
-        print("Video with replaced audio and subtitles created:", output_video)
+        # subprocess.run(ffmpeg_cmd, check=True)
+        subprocess.run(ffmpeg_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        #print("Video with replaced audio and subtitles created:", output_video)
     except subprocess.CalledProcessError as e:
         print("Error occurred while combining video, audio, and subtitles:", e)
 
@@ -91,10 +93,10 @@ def videoDownload(url):
     yt = YouTube(url)
 
     # Print video metadata
-    print("Title:", yt.title)
-    print("Author:", yt.author)
-    print("Duration:", yt.length, "seconds")
-    print("video ID:", yt.video_id)
+    # print("Title:", yt.title)
+    # print("Author:", yt.author)
+    # print("Duration:", yt.length, "seconds")
+    # print("video ID:", yt.video_id)
 
     # Choose a stream to download (e.g., highest resolution)
     stream = yt.streams.get_highest_resolution()
@@ -104,9 +106,9 @@ def videoDownload(url):
     file_extension = mime_type.split('/')[-1]
 
     # Download the video
-    print("Downloading...")
+    #print("Downloading...")
     stream.download(output_path= "./")
-    print("Download complete!\n")
+    #print("Download complete!\n")
     return f"{yt.title}.{file_extension}"
 
 def clean_filename(filename):
@@ -117,6 +119,7 @@ def clean_filename(filename):
 
 
 if __name__ == "__main__":
+
 
     # Filter out specific warnings
     warnings.filterwarnings("ignore", category=UserWarning, message="FP16 is not supported on CPU")
@@ -162,6 +165,8 @@ optional arguments:
     video = args.video
     video_id = args.video_id
 
+    total_tasks = 6
+    overall_progress_bar = tqdm(total=total_tasks, desc="Overall Progress", position=0)
 
     intermediate_files = []
 
@@ -171,8 +176,12 @@ optional arguments:
     if local:
         input_video_path = local
 
-    #print(input_video_path, end="\n\n\n")
+    # update progress bar
+    overall_progress_bar.update(1)
 
+
+    #print(input_video_path, end="\n\n\n")
+############################################
     output_audio_path = "originalAudio.wav"
     extract_audio_from_video(input_video_path, output_audio_path)
 
@@ -193,6 +202,10 @@ optional arguments:
             srt_file.write(srt_content)
 
         intermediate_files.append("originalAudio.wav")
+
+    # update progress bar
+    overall_progress_bar.update(1)
+
 
 ############################################
 
@@ -255,6 +268,9 @@ optional arguments:
         total.export(audioFile, format="wav")
         intermediate_files.extend(["tmp.mp3", "file.wav", "pyrb_out.wav"])
 
+    # update progress bar
+    overall_progress_bar.update(1)
+
     ##############################
 
     if subtitles or audio or video:     
@@ -271,6 +287,9 @@ optional arguments:
         with open(input_file_path, 'w') as file:
             file.write(new_srt_content)
 
+    # update progress bar
+    overall_progress_bar.update(1)
+
     ##############################
 
     if video:
@@ -282,16 +301,27 @@ optional arguments:
             intermediate_files.extend([input_video_path, audioFile, srtFile, transcriptFile])
         if local:
             output_video = f"{input_video_path[:-4]}_translated{input_video_path[-4:]}" #input_video_path.replace("./", "./translated_")
-        combine_video_audio_srt(input_video, input_audio, input_srt, output_video)        
+        combine_video_audio_srt(input_video, input_audio, input_srt, output_video)  
+
+    # update progress bar
+    overall_progress_bar.update(1)
+
+    ################################      
 
     # Delete intermediate files here
     for file in intermediate_files:
         try:
             os.remove(file)
-            print(f"Deleted: {file}")
+            #print(f"Deleted: {file}")
         except OSError as e:
             print(f"Error deleting {file}: {e}")
 
+    
+    # update progress bar
+    overall_progress_bar.update(1)
+
+    ################################
+    overall_progress_bar.close()
 
     endTime = time.time()   
     
