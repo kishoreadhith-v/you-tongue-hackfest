@@ -35,8 +35,14 @@
 
 const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const path = require("path");
-const { PythonShell } = require("python-shell");
+// const { PythonShell } = require("python-shell");
 const {exec} = require("child_process");
+const fs = require('fs');
+
+// The path to the result JSON file
+const filePath = '/result.json';
+
+
 
 // const { downloadVideo, videoInfo } = require("./downloader.js");
 
@@ -193,22 +199,29 @@ ipcMain.on("translate-yt-video", (event, videoUrl, videoId) => {
     console.log(`stdout: ${stdout}`);
     const filePath = '/result.json';
 
-fs.readFile(filePath, 'utf-8', (error, data) => {
-  if (error) {
-    console.error('Error reading file:', error);
-    return;
-  }
-
-  try {
-    const jsonData = JSON.parse(data);
-    console.log('Parsed JSON data:', jsonData);
-    if(jsonData.success){
-      mainWindow.webContents.send("showWarning", "Translation successful");
+// Function to read and process the file
+function readAndProcessFile() {
+  fs.readFile(filePath, 'utf-8', (error, data) => {
+    if (error) {
+      console.error('Error reading file:', error);
+      return;
     }
-  } catch (parseError) {
-    console.error('Error parsing JSON:', parseError);
-  }
-});
+
+    try {
+      const jsonData = JSON.parse(data);
+      console.log('Parsed JSON data:', jsonData);
+      if (jsonData.success) {
+        mainWindow.webContents.send("showWarning", "Translation successful");
+      }
+    } catch (parseError) {
+      console.error('Error parsing JSON:', parseError);
+    }
+  });
+}
+
+// Poll the file periodically
+const pollInterval = 5000; // Poll every 5 seconds
+setInterval(readAndProcessFile, pollInterval);
 
   });
 
