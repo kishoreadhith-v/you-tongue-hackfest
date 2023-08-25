@@ -34,8 +34,8 @@ window.addEventListener("DOMContentLoaded", () => {
       emailElement.textContent = email;
       pointsElement.textContent = points;
 
-      const unlockedVids = document.getElementsByClassName("unlocked");
-      const translatedVids = document.getElementsByClassName("translated");
+      const unlockedVids = document.querySelector(".unlocked");
+      const translatedVids = document.querySelector(".translated");
 
       // Fetch the list of videos from your API
       // Replace this with your actual API call
