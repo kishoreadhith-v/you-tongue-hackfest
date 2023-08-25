@@ -333,12 +333,14 @@ optional arguments:
     print(video_id, end = '')
 
     dumpFile = {
-        "succes" : True,
+        "success" : True,
         "videoID" : video_id,
         "videoPath" : output_video,
         "runTime" : endTime - startTime
     }
-    with open("result.json", "w") as f:
-        json.dump(dumpFile, f, indent = 4)
+    
+    # with open("result.json", "w") as f:
+    #     json.dump(dumpFile, f, indent = 4)
+    print(json.dumps(dumpFile))
 
     warnings.resetwarnings()

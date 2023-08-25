@@ -1,4 +1,8 @@
 C:\Users\dell_\AppData\Roaming\Python\Python311\site-packages\whisper\timing.py:57: NumbaDeprecationWarning: [1mThe 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.[0m
   @numba.jit
-Overall Progress:   0%|          | 0/6 [00:00<?, ?it/s]Overall Progress:  17%|#6        | 1/6 [00:02<00:14,  3.00s/it]Overall Progress:  33%|###3      | 2/6 [02:42<06:20, 95.04s/it]Overall Progress:  50%|#####     | 3/6 [04:28<04:59, 99.96s/it]Overall Progress:  83%|########3 | 5/6 [04:29<00:43, 43.76s/it]Overall Progress: 100%|##########| 6/6 [04:29<00:00, 44.94s/it]
-TjJLIuFKA20
+Overall Progress:   0%|          | 0/6 [00:00<?, ?it/s]Overall Progress:  33%|###3      | 2/6 [00:44<01:29, 22.26s/it]Overall Progress: 100%|##########| 6/6 [00:44<00:00,  7.42s/it]
+Traceback (most recent call last):
+  File "D:\College\YouTongue\you-tongue-hackfest\translate.py", line 333, in <module>
+    print(video_id, end = '')
+          ^^^^^^^^
+NameError: name 'video_id' is not defined

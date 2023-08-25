@@ -101,15 +101,6 @@ function createPlayerWindow() {
   player.loadFile("./renderer/player.html");
 }
 
-// ipcMain.on("url", async (event, url) => {
-//   try {
-//     const video = await videoInfo(url);
-//     console.log("Video info:", video);
-//     mainWindow.webContents.send("video-info", video);
-//   } catch (error) {
-//     console.error("Error processing video info:", error);
-//   }
-// });
 
 // load the required page file (html)
 ipcMain.on("navigate", (event, pageName) => {
@@ -261,7 +252,7 @@ ipcMain.on("translate-yt-video", (event, videoUrl, videoId) => {
   const shell_string = `${pythonCommand} ./translate.py -y ${videoUrl} -id ${videoId} -v > warning.txt 2>&1`;
   const test_string = `python ./hello.py`;
   // console.log(shell_string);
-  exec(test_string, (error, stdout, stderr) => {
+  exec(shell_string, (error, stdout, stderr) => {
     if (error) {
       console.log(`error: ${error.message}`);
       mainWindow.webContents.send("showWarning", error.message);
@@ -275,7 +266,7 @@ ipcMain.on("translate-yt-video", (event, videoUrl, videoId) => {
     try {
       const jsonData = JSON.parse(stdout);
       // console.log("Parsed JSON data:", jsonData.message);
-      ipcMain.send("yt-translated", jsonData);
+      mainWindow.webContents.send("yt-translated", jsonData);
       // Handle the parsed JSON data as needed
     } catch (parseError) {
       console.error("Error parsing JSON:", parseError);
