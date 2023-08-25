@@ -33,12 +33,16 @@
 
 // -------------------------------------------------------------- //
 
+const axios = require("axios");
 const { app, BrowserWindow, Menu, ipcMain, shell } = require("electron");
 const path = require("path");
 // const { PythonShell } = require("python-shell");
 const { exec } = require("child_process");
-const fs = require("fs");
-const fse = require("fs-extra");
+// const fs = require("fs");
+// const fse = require("fs-extra");
+
+const Store = require('electron-store');
+const store = new Store();
 
 // The path to the result JSON file
 const filePath = "/result.json";
@@ -107,6 +111,11 @@ ipcMain.on("navigate", (event, pageName) => {
   const filePath = "./renderer/" + pageName + ".html";
   mainWindow.loadFile(filePath);
 });
+
+ipcMain.on("set-auth-token", (event, authToken) => {
+  store.set('authToken', authToken);
+});
+
 
 ipcMain.on("open-folder", (event, videoPath) => {
   shell.showItemInFolder(videoPath);
@@ -246,12 +255,9 @@ ipcMain.on("local-upload-video", (event, videoPath) => {
 });
 
 ipcMain.on("translate-yt-video", (event, videoUrl, videoId) => {
-  const filePath = "./renderer/" + "loading-screen" + ".html";
-  mainWindow.loadFile(filePath);
   const pythonCommand = '"C:\\Program Files\\Python311\\python.exe"';
-  const shell_string = `${pythonCommand} ./translate.py -y ${videoUrl} -id ${videoId} -v > warning.txt 2>&1`;
+  const shell_string = `${pythonCommand} ./translate.py -y ${videoUrl} -id ${videoId} -v 2> warning.txt`;
   const test_string = `python ./hello.py`;
-  // console.log(shell_string);
   exec(shell_string, (error, stdout, stderr) => {
     if (error) {
       console.log(`error: ${error.message}`);
@@ -265,14 +271,68 @@ ipcMain.on("translate-yt-video", (event, videoUrl, videoId) => {
     }
     try {
       const jsonData = JSON.parse(stdout);
-      // console.log("Parsed JSON data:", jsonData.message);
-      mainWindow.webContents.send("yt-translated", jsonData);
-      // Handle the parsed JSON data as needed
+      console.log("Parsed JSON data:", jsonData);
+      // mainWindow.webContents.send("yt-translated", jsonData); // Remove this line
+      const authToken = store.get('authToken');
+      handleYtTranslated(jsonData, authToken); // Call a function to handle the event here
     } catch (parseError) {
       console.error("Error parsing JSON:", parseError);
     }
   });
 });
+
+// Create a function to handle the event
+async function handleYtTranslated(jsonData, authToken) {
+  // Your event handling logic here
+  if (jsonData.success) {
+    console.log(jsonData);
+    // Remove the loader element
+    // page.removeChild(loader);
+
+    // Display success message
+    // const successMessage = document.createElement("h3");
+    // successMessage.textContent =
+    //   "Video successfully translated! Head to the dashboard to view your video.";
+    // successMessage.className = "success-msg";
+    // page.appendChild(successMessage);
+
+    // Prepare data for the API request
+    const requestData = {
+      videoId: jsonData.videoID,
+      tl: jsonData.videoPath,
+      runTime: jsonData.runTime,
+    };
+    console.log(requestData)
+    // Perform the API request
+    try {
+      // const response = await fetch("http://localhost:5173/api/new-tl", {
+      //   method: "POST",
+        // headers: {
+        //   "Content-Type": "application/json",
+        //   Authorization: `Bearer ${authToken}`,
+        // },
+      //   body: JSON.stringify(requestData),
+      // });
+      const response = await axios.post(root + "api/new-tl", requestData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      console.log(response);
+      if (!response.ok) {
+        // Handle API response errors
+        console.error("API request failed:", response.statusText);
+      }
+    } catch (error) {
+      // Handle fetch error
+      console.error("Fetch error:", error);
+    }
+  }
+  // You can also interact with your main window here if needed
+  // mainWindow.webContents.send("yt-translated", jsonData);
+}
 
 // app is ready
 

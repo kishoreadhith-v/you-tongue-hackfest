@@ -196,6 +196,7 @@ app.post("/api/video", async (req, res) => {
 app.post("/api/new-tl", async (req, res) => {
   try {
     const { videoId, tl, runTime } = req.body;
+    console.log(videoId, tl, runTime);
     if (!req.headers.authorization) {
       return res.status(401).json({ error: "Authorization token missing" });
     }

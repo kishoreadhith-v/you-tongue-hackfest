@@ -14,8 +14,8 @@ const loginForm = document.getElementById('loginForm');
         });
         const data = await response.json();
         const authToken = data.token;
-        localStorage.setItem('authToken', authToken);
-        console.log('Authentication response:', data);
+        ipcRenderer.send("set-auth-token", authToken);
+                console.log('Authentication response:', data);
         if(data.message === 'Login successful') {
           ipcRenderer.send('navigate', 'dashboard');
         }

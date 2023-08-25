@@ -330,7 +330,7 @@ optional arguments:
     if timed:
         print("Total time taken: ", endTime - startTime)
 
-    print(video_id, end = '')
+    #print(video_id, end = '')
 
     dumpFile = {
         "success" : True,
@@ -341,6 +341,6 @@ optional arguments:
     
     # with open("result.json", "w") as f:
     #     json.dump(dumpFile, f, indent = 4)
-    print(json.dumps(dumpFile))
+    print(json.dumps(dumpFile), end = '')
 
     warnings.resetwarnings()

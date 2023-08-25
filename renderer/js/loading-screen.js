@@ -2,6 +2,7 @@
 
 async function handleSuccess(jsonData, authToken) {
   if (jsonData.success) {
+    console.log(jsonData);
     // Remove the loader element
     page.removeChild(loader);
 
@@ -30,6 +31,7 @@ async function handleSuccess(jsonData, authToken) {
         body: JSON.stringify(requestData),
       });
 
+      console.log(response);
       if (response.ok) {
         const pointsData = document.createElement("h4");
         pointsData.textContent = `You have earned ${runTime} points!`;
